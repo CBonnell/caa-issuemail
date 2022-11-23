@@ -149,7 +149,7 @@ mail.example.com         CAA 0 issue "ca1.example.net"
 mail.example.com         CAA 0 issue "ca2.example.org"
 ~~~
 
-The following RRSet contains a single "issueemail" property where the 
+The following RRSet contains a single "issueemail" property where the
 issuer-domain-name is the empty string, so the issuance of certificates
 certifying email addresses for the domain are prohibited:
 
