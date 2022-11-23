@@ -1,0 +1,267 @@
+
+
+
+
+Network Working Group                                         C. Bonnell
+Internet-Draft                                            DigiCert, Inc.
+Intended status: Standards Track                        23 November 2022
+Expires: 27 May 2023
+
+
+    Certification Authority Authorization (CAA) Processing for Email
+                               Addresses
+                  draft-bonnell-caa-issueemail-latest
+
+Abstract
+
+   The Certificate Authority Authorization (CAA) DNS resource record
+   type provides a mechanism for domains to express the allowed set of
+   Certificate Authorities that may issue certificates for that domain.
+   The core CAA specification (RFC 8659) solely defines property tags
+   that restrict the issuance of certificates that certify domain names;
+   it does not define a mechanism for domains to restrict the issuance
+   of certificates that include email addresses.  This specification
+   defines a property tag that grants authorization to Certificate
+   Authorities to issue certificates which certify email addresses.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at
+   https://CBonnell.github.io/caa-issueemail/draft-bonnell-caa-
+   issueemail.html.  Status information for this document may be found
+   at https://datatracker.ietf.org/doc/draft-bonnell-caa-issueemail/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/CBonnell/caa-issueemail.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 27 May 2023.
+
+Copyright Notice
+
+   Copyright (c) 2022 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  The "issueemail" Property Tag Syntax
+   4.  "issueemail" Property Tag Processing
+   5.  "issuemail" Property Tag Examples
+   6.  Security Considerations
+   7.  IANA Considerations
+   8.  References
+     8.1.  Normative References
+     8.2.  Informative References
+   Acknowledgments
+   Author's Address
+
+1.  Introduction
+
+   This document defines a CAA property tag which restricts the allowed
+   set of issuers for electronic email addresses.  Its syntax and
+   processing semantics are similar to the "issue" property tag as
+   defined in section 4.2 of [RFC8659].
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  The "issueemail" Property Tag Syntax
+
+   This document defines the "issueemail" property tag.  The presence of
+   one or more "issueemail" property tags in the Relevant Resource
+   Record Set (RFC 8659) indicates that the domain is requesting that
+   Certification Authorities restrict the issuance of certificates that
+   certify email addresses.
+
+   The CAA "issueemail" Property Value has the following sub-syntax
+   (specified in ABNF as per [RFC5234]):
+
+     issueemail-value = *WSP [issuer-domain-name *WSP]
+       [";" *WSP [parameters *WSP]]
+
+     issuer-domain-name = label *("." label)
+     label = (ALPHA / DIGIT) *( *("-") (ALPHA / DIGIT))
+
+     parameters = (parameter *WSP ";" *WSP parameters) / parameter
+     parameter = tag *WSP "=" *WSP value
+     tag = (ALPHA / DIGIT) *( *("-") (ALPHA / DIGIT))
+     value = *(%x21-3A / %x3C-7E)
+
+   Readers who are familiar with the sub-syntax of the "issue" and
+   "issuewild" Property Tags will recognize that this sub-syntax is
+   identical.
+
+   Semantics and processing of parameters in the issueemail-value are
+   beyond the scope of this document.
+
+4.  "issueemail" Property Tag Processing
+
+   Prior to issuing a certificate that certifies an email address, the
+   Certification Authority MUST check for publication of a Relevant
+   RRSet.  The discovery of such a Relevant RRSet MUST be performed
+   using the algorithm specified in section 3 of [RFC8659].  The input
+   domain to the discovery algorithm SHALL be the domain part
+   ([RFC5322]) of the email address that is to be certified.  If the
+   domain-part of the email address to be certified is an
+   Internationalized Domain Name ([RFC5890]) that contains one or more
+   U-Labels, then all U-Labels MUST be converted to their A-Label
+   representation ([RFC5891]) for the purpose of discovering the
+   Relevant RRSet for that email address.
+
+   If the Relevant RRSet is empty, or the Relevant RRSet does not
+   contain any "issueemail" property tags, then the domain has not
+   requested any restrictions on the issuance of certificates for email
+   addresses.  The presence of other property tags, such as "issue" or
+   "issuewild", do not restrict the issuance of certificates which
+   certify email addresses.
+
+   For each "issueemail" property tag in the Relevant RRSet, the
+   Certification Authority SHALL compare its issuer-domain-name with the
+   issuer-domain-name as expressed in the property value.  If there is
+   not any "issueemail" record whose issuer-domain-name as expressed in
+   the property value matches the Certification Authority's issuer-
+   domain-name, then the Certification Authority MUST NOT issue the
+   certificate.  If the Relevant RRSet contains any "issueemail"
+   property tags whose issueemail-value does not conform to the ABNF
+   syntax as defined section 3 of this document, then that record SHALL
+   be treated as if the issuer-domain-name in the issueemail-value is
+   the empty string.
+
+   The assignment of issuer-domain-names to Certification Authorities is
+   beyond the scope of this document.
+
+   If the certificate certifies more than one email address, then the
+   Certification Authority MUST perform the above procedure for each
+   email address to be certified.
+
+5.  "issuemail" Property Tag Examples
+
+   Several illustrative examples of Relevant RRSets and their expected
+   processing semantics follow.  All examples assume that the issuer-
+   domain-name for the Certification Authority is "ca.example.com".
+
+   The following RRSet does not specify any "issueemail" property tags,
+   so there are no restrictions on the issuance of certificates which
+   certify email addresses for that domain:
+
+   mail.example.com         CAA 0 issue "ca1.example.net"
+   mail.example.com         CAA 0 issue "ca2.example.org"
+
+   The following RRSet contains a single "issueemail" property where the
+   issuer-domain-name is the empty string, so the issuance of
+   certificates certifying email addresses for the domain are
+   prohibited:
+
+   mail.example.com         CAA 0 issueemail ";"
+
+   The following RRSet contains multiple "issueemail" property tags, one
+   of which matches the issuer-domain-name of the example Certification
+   Authority ("ca.example.com") and one property tag which does not
+   match.  Given that there is at least one record whose issuer-domain-
+   name matches the Certification Authority's issuer-domain-name,
+   issuance is permitted.
+
+   mail.example.com         CAA 0 issueemail ";"
+   mail.example.com         CAA 0 issueemail "ca.example.com"
+
+6.  Security Considerations
+
+   TODO: verify that this is correct
+
+   This document introduces no security considerations beyond those
+   expressed in [RFC8659].
+
+7.  IANA Considerations
+
+   The author(s) request the registration of the following
+   "Certification Authority Restriction Properties":
+
+     +============+======================================+===========+
+     | Tag        | Meaning                              | Reference |
+     +============+======================================+===========+
+     | issueemail | Authorization Entry by Email Address | [This     |
+     |            |                                      | document] |
+     +------------+--------------------------------------+-----------+
+
+                                  Table 1
+
+8.  References
+
+8.1.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC5234]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
+              Specifications: ABNF", STD 68, RFC 5234,
+              DOI 10.17487/RFC5234, January 2008,
+              <https://www.rfc-editor.org/rfc/rfc5234>.
+
+   [RFC5322]  Resnick, P., Ed., "Internet Message Format", RFC 5322,
+              DOI 10.17487/RFC5322, October 2008,
+              <https://www.rfc-editor.org/rfc/rfc5322>.
+
+   [RFC5891]  Klensin, J., "Internationalized Domain Names in
+              Applications (IDNA): Protocol", RFC 5891,
+              DOI 10.17487/RFC5891, August 2010,
+              <https://www.rfc-editor.org/rfc/rfc5891>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8659]  Hallam-Baker, P., Stradling, R., and J. Hoffman-Andrews,
+              "DNS Certification Authority Authorization (CAA) Resource
+              Record", RFC 8659, DOI 10.17487/RFC8659, November 2019,
+              <https://www.rfc-editor.org/rfc/rfc8659>.
+
+8.2.  Informative References
+
+   [RFC5890]  Klensin, J., "Internationalized Domain Names for
+              Applications (IDNA): Definitions and Document Framework",
+              RFC 5890, DOI 10.17487/RFC5890, August 2010,
+              <https://www.rfc-editor.org/rfc/rfc5890>.
+
+Acknowledgments
+
+   TODO acknowledge.
+
+Author's Address
+
+   Corey Bonnell
+   DigiCert, Inc.
+   Email: corey.bonnell@digicert.com
