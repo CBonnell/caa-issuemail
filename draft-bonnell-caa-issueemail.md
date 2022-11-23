@@ -19,11 +19,11 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
-category: info
+title: "Certification Authority Authorization (CAA) Processing for Email Addresses"
+abbrev: "CAA for Email Addresses"
+category: std
 
-docname: draft-todo-yourname-protocol-latest
+docname: draft-bonnell-caa-issueemail-latest
 submissiontype: IETF  # also: "independent", "IAB", or "IRTF"
 number:
 date:
@@ -45,9 +45,9 @@ venue:
 
 author:
  -
-    fullname: Your Name Here
-    organization: Your Organization Here
-    email: your.email@example.com
+    fullname: Corey Bonnell
+    organization: DigiCert, Inc.
+    email: corey.bonnell@digicert.com
 
 normative:
 
