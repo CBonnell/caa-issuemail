@@ -106,7 +106,7 @@ the discovery algorithm SHALL be the domain part ([RFC5322]) of the
 email address that is to be certified. If the domain-part of the email
 address to be certified is an Internationalized Domain Name ([RFC5890])
 that contains one or more U-Labels, then all U-Labels MUST be converted
-to their A-Label representation (RFC 5891) for the purpose of
+to their A-Label representation ([RFC5891]) for the purpose of
 discovering the Relevant RRSet for that email address.
 
 If the Relevant RRSet is empty, or the Relevant RRSet does not contain
