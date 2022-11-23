@@ -59,7 +59,7 @@ issue certificates which certify email addresses.
 This document defines a CAA property tag which restricts the allowed set
 of issuers for electronic email addresses. Its syntax and processing
 semantics are similar to the "issue" property tag as defined in section
-4.2 of [RFC 8659].
+4.2 of [RFC8659].
 
 # Conventions and Definitions
 
@@ -102,10 +102,10 @@ Prior to issuing a certificate that certifies an email address, the
 Certification Authority MUST check for publication of a Relevant RRSet.
 The discovery of such a Relevant RRSet MUST be performed using the
 algorithm specified in section 3 of [RFC8659]. The input domain to
-the discovery algorithm SHALL be the domain part (RFC5322) of the email
-address that is to be certified. If the domain-part of the email address
-to be certified is an Internationalized Domain Name (RFC5890) that
-contains one or more U-Labels, then all U-Labels MUST be converted
+the discovery algorithm SHALL be the domain part ([RFC5322]) of the
+email address that is to be certified. If the domain-part of the email
+address to be certified is an Internationalized Domain Name ([RFC5890])
+that contains one or more U-Labels, then all U-Labels MUST be converted
 to their A-Label representation (RFC 5891) for the purpose of
 discovering the Relevant RRSet for that email address.
 
@@ -174,7 +174,7 @@ mail.example.com         CAA 0 issueemail "ca.example.com"
 TODO: verify that this is correct
 
 This document introduces no security considerations beyond those
-expressed in RFC8659.
+expressed in [RFC8659].
 
 # IANA Considerations
 
