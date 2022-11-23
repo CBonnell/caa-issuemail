@@ -30,13 +30,13 @@ author:
     email: corey.bonnell@digicert.com
 
 normative:
- - RFC5234:
- - RFC5322:
- - RFC5891:
- - RFC8659:
+  RFC5234:
+  RFC5322:
+  RFC5891:
+  RFC8659:
 
 informative:
- - RFC5890:
+  RFC5890:
 
 
 --- abstract
