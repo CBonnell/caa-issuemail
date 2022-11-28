@@ -17,7 +17,7 @@
 /versioned/
 Gemfile.lock
 archive.json
-draft-bonnell-caa-issueemail.xml
+draft-bonnell-caa-issuemail.xml
 package-lock.json
 report.xml
 !requirements.txt

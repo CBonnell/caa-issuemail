@@ -1,4 +1,4 @@
 # License
 
 See the
-[guidelines for contributions](https://github.com/CBonnell/caa-issueemail/blob/main/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/CBonnell/caa-issuemail/blob/main/CONTRIBUTING.md).
