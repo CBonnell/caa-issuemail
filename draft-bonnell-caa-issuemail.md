@@ -12,14 +12,14 @@ v: 3
 # area: AREA
 # workgroup: WG Working Group
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
+ - caa
+ - certification authority authorization
+ - email address
 venue:
-#  group: WG
-#  type: Working Group
-#  mail: WG@example.com
-#  arch: https://example.com/WG
+  group: "Limited Additional Mechanisms for PKIX and SMIME (lamps)"
+  type: "Working Group"
+  mail: "spasm@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/spasm/"
   github: "CBonnell/caa-issuemail"
   latest: "https://CBonnell.github.io/caa-issuemail/draft-bonnell-caa-issuemail.html"
 
